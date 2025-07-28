@@ -8,10 +8,12 @@
     align-items: center;
     height: 100vh;
     gap: 0;
-}
-
-.score-container{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.instruction{
+    text-align: center;
+}
+.score-container{
     text-align: center;
 }
 .score-container > h1{
