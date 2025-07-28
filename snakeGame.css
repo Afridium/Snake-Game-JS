@@ -7,4 +7,16 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    gap: 0;
+}
+
+.score-container{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+}
+.score-container > h1{
+    font-size: 50px;
+}
+.score-container > p{
+    font-size: 25px;
 }

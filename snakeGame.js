@@ -21,6 +21,9 @@ let velocityY = 0;
 //giving snake a body
 let snakeBody = [];
 
+let gameInterval;
+let scoreCount = 0;
+
 window.onload = function () {
     boardSize = document.getElementById('canvasSize');
     boardSize.height = blockSize * row;
@@ -28,14 +31,30 @@ window.onload = function () {
     ctx = boardSize.getContext('2d');
     foodPostion();
     document.addEventListener('keyup', makeItMove);
-    setInterval(update, 1000 / 5);
+    gameInterval = setInterval(update, 200);
 }
 
 function update() {
+    //game over
+    if (snakeX == 0 || snakeX == col * blockSize || snakeY == 0 || snakeY == row * blockSize) {
+        clearInterval(gameInterval);
+        alert("game over: Snake hit the wall");
+        location.reload();
+        return;
+    }
+
+    for (let i = 0; i < snakeBody.length; i++) {
+        if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
+            clearInterval(gameInterval);
+            alert("game over: Snake Ate Itself");
+            location.reload();
+            return;
+        }
+    }
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, blockSize * col, blockSize * row);
 
-    
+
     ctx.fillStyle = 'blue';
     ctx.fillRect(foodX, foodY, blockSize, blockSize);
 
@@ -44,35 +63,42 @@ function update() {
     snakeX += velocityX * blockSize;
     snakeY += velocityY * blockSize;
 
-    
+
     if (snakeX == foodX && snakeY == foodY) {
-        snakeBody.push([oldHead]);
+        snakeBody.push([snakeX, snakeY]);
         foodPostion();
+        scoreCount++;
+        document.getElementById('score').innerText = scoreCount;
     }
 
-    
 
     if (snakeBody.length > 0) {
         for (let i = snakeBody.length - 1; i > 0; i--) {
             snakeBody[i] = snakeBody[i - 1];
         }
-        
+
         snakeBody[0] = oldHead;
     }
 
-    //setting updated position
-    //snake
     ctx.fillStyle = 'yellow';
     for (let i = 0; i < snakeBody.length; i++) {
         ctx.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
     }
     ctx.fillRect(snakeX, snakeY, blockSize, blockSize);
 
+
+
 }
 
 function foodPostion() {
-    foodX = Math.floor(Math.random() * col) * blockSize;
-    foodY = Math.floor(Math.random() * row) * blockSize;
+    const safeCols = col - 2;  // leave 1 block margin both sides
+    const safeRows = row - 2;
+
+    const randCol = Math.floor(Math.random() * safeCols) + 1;  // [1, col - 2]
+    const randRow = Math.floor(Math.random() * safeRows) + 1;
+
+    foodX = randCol * blockSize;
+    foodY = randRow * blockSize;
 }
 
 function makeItMove(event) {
@@ -93,3 +119,7 @@ function makeItMove(event) {
         velocityY = 0;
     }
 }
+
+
+//score
+
